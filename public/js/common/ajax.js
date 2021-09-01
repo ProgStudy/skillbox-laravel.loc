@@ -9,12 +9,21 @@ function ajax(e, callback = null) {
         success: async(data) => {
             if (callback != null) callback(data);
         },
-        error: function () {
+        error: function (e) {
             let obj = {
-                message: 'Не удалось отправить запрос или спарсить ответ!'
+                message: 'Не удалось отправить запрос или спарсить ответ!',
+                fieldMessages: {}
             };
 
-            callback(obj, false);
+            if (e.responseJSON) {
+                let result = e.responseJSON;
+                if (result.errors) {
+                    obj.fieldMessages = result.errors;
+                } else {
+                    obj.message = result.message;
+                }
+            }
+            callback(obj, true);
         },
     });
 }

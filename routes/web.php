@@ -27,15 +27,13 @@ Route::group(['prefix' => 'contacts'], function() {
 });
 
 Route::group(['prefix' => 'articles'], function() {
-    Route::get('/create', 'ArticleController@create');
-    Route::get('/{slug}', 'ArticleController@get');
-
-    Route::group(['prefix' => 'ajax'], function() {
-        Route::post('/save', 'ArticleController@save');
-    });
+    Route::get('/{slug}', 'ArticleController@show');
 });
 
-Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function(){
+Route::group(['prefix' => 'admin'], function(){
     Route::get('/',         'AdminController@index');
     Route::get('/feedback', 'AdminController@feedback');
+
+    Route::resource('/articles', 'ArticleController');
+
 });

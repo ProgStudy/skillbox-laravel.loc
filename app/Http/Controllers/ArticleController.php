@@ -2,57 +2,108 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
+use App\Http\Controllers\Controller;
+use App\Http\Requests\ArticleFormRequest;
 use App\Models\Article;
-
-use Validator;
 
 class ArticleController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $articles = Article::all();
+        return view('admin.articles.index', ['articles' => $articles]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
-        return view('articles.form');
+        return view('admin.articles.form.new');
     }
 
-    public function get($slug)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  App\Http\Requests\ArticleFormRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(ArticleFormRequest $request)
     {
-        $article = Article::findBySlug($slug);
-        if (!$article) return abort(404);
-
-        return view('articles.info', ['article' => $article]);
-    }
-
-    public function save(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name'          => 'required|min:5|max:255',
-            'slug'          => 'required|regex:/^[A-z0-9]+(?:\-[A-z0-9]+)*$/u|max:255',
-            'preview'       => 'required|max:255',
-            'description'   => 'required',
-            'hasPublic'     => 'nullable|boolean'
-        ]);
-
-        if ($validator->fails()) return $this->ajaxError($validator->errors()->first());
-        
-        $article = Article::findBySlug($request->slug);
-
-        if ($article) return $this->ajaxError('С таким символьным кодом уже существует запись!');
-
-        $article = new Article();
-
-        $article->slug          = $request->slug;
-        $article->name          = $request->name;
-        $article->preview       = $request->preview;
-        $article->description   = $request->description;
-        $article->has_public    = isset($request->hasPublic) ? 1 : 0;
-
         try {
-            $article->save();
-        } catch (Exception $e) {
-            return $this->ajaxError('Не удалось сохранить статью!');
+            Article::create(array_merge($request->allCorrectFields(), ['created_at' => now(), 'updated_at' => now()]));
+        } catch (\Throwable $th) {
+            return $this->ajaxError('Не удалось добавить новую статью!');
         }
 
-        return $this->ajaxSuccess('Запись успешна сохранена!');
+        return $this->ajaxSuccess('Статья успешно добавлена!');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function show($slug)
+    {
+        $article = Article::findBySlug($slug);
+
+        if (!$article) return abort(404);
+
+        return view('article', ['article' => $article]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Article  $article
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Article $article)
+    {
+        return view('admin.articles.form.edit', ['artice' => $article]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  App\Http\Requests\ArticleFormRequest  $request
+     * @param  \App\Models\Article  $article
+     * @return \Illuminate\Http\Response
+     */
+    public function update(ArticleFormRequest $request, Article $article)
+    {
+        try {
+            $article->fill((array) $request->allCorrectFields())->save();
+        } catch (\Throwable $th) {
+            return $this->ajaxError('Не удалось обновить статью!');
+        }
+
+        return $this->ajaxSuccess('Статья успешно обновлена!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Article  $article
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Article $article)
+    {
+        try {
+            $article->delete();
+        } catch (\Throwable $th) {
+            return $this->ajaxError('Не удалось удалить статью!');
+        }
+        
+        return $this->ajaxSuccess('Статья успешна удалена!');
     }
 }

@@ -9,8 +9,12 @@ class Article extends Model
 {
     use HasFactory;
 
-    public static function findBySlug($slug)
+    protected $guarded = [];
+
+    public static function findBySlug($slug, $notSelectById = null)
     {
-        return self::where('slug', $slug)->first();
+        return self::where('slug', $slug)->where(function($q) use ($notSelectById) {
+            if ($notSelectById) $q->where('id', '!=', $notSelectById);
+        })->first();
     }
 }
