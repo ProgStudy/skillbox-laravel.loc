@@ -12,12 +12,17 @@
         <div class="blog-post">
             <h2 class="blog-post-title"><a href="/articles/{{$article->slug}}">{{$article->name}}</a></h2>
             <p class="blog-post-meta">{{date('F d, Y', strtotime($article->created_at))}}</p>
-
             <p>{{$article->preview}}</p>
+            <div>
+                @foreach ($article->tags as $tag)
+                <span class="badge badge-secondary">{{$tag->name}}</span>   
+                @endforeach
+            </div>
         </div><!-- /.blog-post -->
         @endforeach
 
     </div><!-- /.blog-main -->
+    @include('layouts.sidebar')
 
 </div><!-- /.row -->
 @endsection

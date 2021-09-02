@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleFormRequest;
 use App\Models\Article;
+use App\Services\TagsSynchronizer;
 
 class ArticleController extends Controller
 {
@@ -35,10 +36,11 @@ class ArticleController extends Controller
      * @param  App\Http\Requests\ArticleFormRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ArticleFormRequest $request)
+    public function store(TagsSynchronizer $tSync, ArticleFormRequest $request)
     {
         try {
-            Article::create(array_merge($request->allCorrectFields(), ['created_at' => now(), 'updated_at' => now()]));
+            $article = Article::create(array_merge($request->allCorrectFields(), ['created_at' => now(), 'updated_at' => now()]));
+            $tSync->sync(collect(explode(',', request('tags'))), $article);
         } catch (\Throwable $th) {
             return $this->ajaxError('Не удалось добавить новую статью!');
         }
@@ -79,10 +81,11 @@ class ArticleController extends Controller
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function update(ArticleFormRequest $request, Article $article)
+    public function update(TagsSynchronizer $tSync, ArticleFormRequest $request, Article $article)
     {
         try {
-            $article->fill((array) $request->allCorrectFields())->save();
+            $article->fill((array) $request->allCorrectFields(), ['updated_at' => now()])->save();
+            $tSync->sync(collect(explode(',', request('tags'))), $article);
         } catch (\Throwable $th) {
             return $this->ajaxError('Не удалось обновить статью!');
         }

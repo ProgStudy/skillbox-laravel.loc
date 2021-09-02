@@ -28,6 +28,7 @@ Route::group(['prefix' => 'contacts'], function() {
 
 Route::group(['prefix' => 'articles'], function() {
     Route::get('/{slug}', 'ArticleController@show');
+    Route::get('/tags/{tag}', 'TagController@index');
 });
 
 Route::group(['prefix' => 'admin'], function(){

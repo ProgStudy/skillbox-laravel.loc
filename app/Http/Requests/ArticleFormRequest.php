@@ -43,7 +43,7 @@ class ArticleFormRequest extends FormRequest
     public function allCorrectFields()
     {
         return array_merge(
-            Arr::where((array) $this->request->all(), function($v, $k){return $k == '_token' ? false : true;}),
+            Arr::where((array) $this->request->all(), function($v, $k){return in_array($k, ['_token', 'tags']) ? false : true;}),
             ['has_public' => $this->request->has('has_public') ? 1 : 0]
         );
     }

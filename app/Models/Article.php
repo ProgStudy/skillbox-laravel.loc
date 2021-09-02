@@ -17,4 +17,9 @@ class Article extends Model
             if ($notSelectById) $q->where('id', '!=', $notSelectById);
         })->first();
     }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
 }
