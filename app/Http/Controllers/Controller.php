@@ -19,6 +19,11 @@ class Controller extends BaseController
         ]);
     }
 
+    public function ajaxErrorForm($fields = [])
+    {
+        return response()->json(array_merge(['status' => 'error_form'], $fields));
+    }
+
     public function ajaxSuccess($data = [])
     {
         $result = ['status' => 'success'];

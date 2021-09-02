@@ -14,6 +14,14 @@
         <!-- Custom styles for this template -->
         <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
         <link href="https://getbootstrap.com/docs/4.1/examples/blog/blog.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
+
+        <style>
+            .error-field {
+                font-size: 12px;
+            }
+        </style>
     </head>
 
     <body>

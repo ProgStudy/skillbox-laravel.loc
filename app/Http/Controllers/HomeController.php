@@ -13,8 +13,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $articles = Article::orderBy('created_at', 'desc')->get();
-
+        $articles = Article::where('has_public', 1)->orderBy('created_at', 'desc')->get();
         return view('home', ['articles' => $articles]);
     }
 
