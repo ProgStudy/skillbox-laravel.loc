@@ -13,12 +13,17 @@
 </div>
 <div class="form-group">
     <label>Краткое содержание</label>
-    <textarea name="preview" class="form-control" style="resize:none">{{isset($article) ? $article->preview : ''}}</textarea>
+    <textarea name="preview" class="form-control" style="resize:none; height:150px">{{isset($article) ? $article->preview : ''}}</textarea>
     <p class="text-danger error-field"></p>
 </div>
 <div class="form-group">
     <label>Подробное содержание</label>
     <textarea name="description" class="form-control" style="resize:vertical; height: 250px;"> {{isset($article) ? $article->description : ''}}</textarea>
+    <p class="text-danger error-field"></p>
+</div>
+<div class="form-group">
+    <label>Символьный код</label>
+    <input type="text" name="tags" value="{{isset($article) ? $article->tags->pluck('name')->implode(',') : ''}}" class="form-control">
     <p class="text-danger error-field"></p>
 </div>
 <div class="form-group form-check">

@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-8 blog-main">
+    <div class="col-md-12 blog-main">
         <h3 class="pb-3 mb-4 font-italic border-bottom">@yield('title')</h3>
             <table class="table table-bordered">
                 <thead>
@@ -33,9 +33,9 @@
                             <span class="badge badge-{{$article->has_public ? 'success' : 'danger'}}">{{$article->has_public ? 'Опубликована' : 'Не опубликована'}}</span>
                         </td>
                         <td>
-                            <div class="text-center" style="width: 90px;">
+                            <div class="text-center">
                                 <a href="articles/{{$article->id}}/edit" class="btn btn-outline-primary far fa-edit"></a>
-                                <form class="d-inline" action="articles/{{$article->id}}" method="delete" data-confirm-message="Вы точно хотите удалить статью?">
+                                <form class="d-inline" action="articles/{{$article->id}}" data-redirect="/admin/articles" method="delete" data-confirm-message="Вы точно хотите удалить статью?">
                                     @csrf
                                     <button type="submit" class="btn btn-outline-danger far fa-trash-alt"></button>
                                 </form>
