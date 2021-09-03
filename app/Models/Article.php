@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Article extends Model
 {
@@ -21,5 +22,15 @@ class Article extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class);
+    }
+
+    public function hasOwner()
+    {
+        return !Auth::check() ? false : ($this->owner_id == Auth::user()->id);
+    }
+
+    public static function allByOwner()
+    {
+        return self::where('owner_id', Auth::user()->id)->get();
     }
 }

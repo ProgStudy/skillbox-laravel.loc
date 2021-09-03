@@ -22,7 +22,7 @@
     <p class="text-danger error-field"></p>
 </div>
 <div class="form-group">
-    <label>Символьный код</label>
+    <label>Теги</label>
     <input type="text" name="tags" value="{{isset($article) ? $article->tags->pluck('name')->implode(',') : ''}}" class="form-control">
     <p class="text-danger error-field"></p>
 </div>

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,10 +32,25 @@ Route::group(['prefix' => 'articles'], function() {
     Route::get('/tags/{tag}', 'TagController@index');
 });
 
-Route::group(['prefix' => 'admin'], function(){
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
     Route::get('/',         'AdminController@index');
     Route::get('/feedback', 'AdminController@feedback');
 
     Route::resource('/articles', 'ArticleController');
 
+});
+
+Auth::routes();
+
+//переопределить методы для работы с ajax запросами
+Route::group(['namespace' => 'Auth'], function () {
+    Route::post('/login',       ['uses' => 'LoginController@login'])->name('login');
+    Route::post('/logout',      ['uses' => 'LoginController@logout'])->name('logout');
+    Route::post('/register',    ['uses' => 'RegisterController@register'])->name('register');
+
+    Route::prefix('password')->group(function () {
+        Route::post('/email',       ['uses' => 'ForgotPasswordController@sendResetLinkEmail'])->name('password.email');
+        Route::post('/reset',       ['uses' => 'ResetPasswordController@reset'])->name('password.update');
+        Route::post('/confirm',     ['uses' => 'ConfirmPasswordController@confirm']);
+    });
 });
