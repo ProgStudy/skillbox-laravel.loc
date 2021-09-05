@@ -24,6 +24,11 @@ class Controller extends BaseController
         return response()->json(array_merge(['status' => 'error_form'], $fields));
     }
 
+    public function ajaxErrorFieldsForm($validation = null)
+    {
+        return response()->json(['message' => 'The given data was invalid.', 'errors' => $validation->errors()], 422);
+    }
+
     public function ajaxSuccess($data = [])
     {
         $result = ['status' => 'success'];

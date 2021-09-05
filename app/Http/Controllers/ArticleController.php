@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleFormRequest;
 use App\Models\Article;
 use App\Services\TagsSynchronizer;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
@@ -16,7 +17,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::all();
+        $articles = Article::allByOwner();
         return view('admin.articles.index', ['articles' => $articles]);
     }
 
@@ -39,7 +40,7 @@ class ArticleController extends Controller
     public function store(TagsSynchronizer $tSync, ArticleFormRequest $request)
     {
         try {
-            $article = Article::create(array_merge($request->allCorrectFields(), ['created_at' => now(), 'updated_at' => now()]));
+            $article = Article::create(array_merge($request->allCorrectFields(), ['owner_id' => Auth::user()->id, 'created_at' => now(), 'updated_at' => now()]));
             $tSync->sync(collect(explode(',', request('tags'))), $article);
         } catch (\Throwable $th) {
             return $this->ajaxError('Не удалось добавить новую статью!');
@@ -58,7 +59,9 @@ class ArticleController extends Controller
     {
         $article = Article::findBySlug($slug);
 
-        if (!$article) return abort(404);
+        if (!$article) {
+            return abort(404);
+        }
 
         return view('article', ['article' => $article]);
     }
@@ -71,6 +74,10 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
+        if (!$article->hasOwner()) {
+            return abort(403);
+        }
+        
         return view('admin.articles.form.edit', ['artice' => $article]);
     }
 
