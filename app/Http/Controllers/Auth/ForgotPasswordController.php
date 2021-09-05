@@ -22,14 +22,13 @@ class ForgotPasswordController extends Controller
 
     use SendsPasswordResetEmails;
 
-    public function sendResetLinkEmail(Request $request, PasswordBroker $passwords)
+    public function sendResetLinkEmail(Request $request, PasswordBroker $passwordBroker)
     {
         $this->validate($request, ['email' => 'required|email']);
 
-        $response = $passwords->sendResetLink($request->only('email'));
+        $response = $passwordBroker->sendResetLink($request->only('email'));
     
-        switch ($response)
-        {
+        switch ($response) {
             case PasswordBroker::RESET_LINK_SENT:
                 return $this->ajaxSuccess('Ссылка для пароля была отправлена на ваш адрес электронной почты');
     

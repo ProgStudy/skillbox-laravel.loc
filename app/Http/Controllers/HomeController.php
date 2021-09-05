@@ -34,8 +34,10 @@ class HomeController extends Controller
             'description'   => 'required'
         ]);
 
-        if ($validator->fails()) return $this->ajaxError($validator->errors()->first());
-
+        if ($validator->fails()) {
+            return $this->ajaxError($validator->errors()->first());
+        }
+        
         $contact                = new Contact();
 
         $contact->email         = $request->email;

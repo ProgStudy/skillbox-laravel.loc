@@ -38,6 +38,7 @@ class ConfirmPasswordController extends Controller
     {
         $this->middleware('auth');
     }
+    
     public function confirm(Request $request)
     {
         dd('confirm');

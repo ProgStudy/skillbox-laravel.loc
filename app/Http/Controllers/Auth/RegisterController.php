@@ -78,7 +78,10 @@ class RegisterController extends Controller
 
         if ($validation->fails()) return $this->ajaxErrorFieldsForm($validation);
         
-        if ($this->create($request->all())) return $this->ajaxSuccess('Вы успешно зарегистрировались!');
-        else return $this->ajaxError('Не удалось зарегистрироваться!');
+        if ($this->create($request->all())) {
+            return $this->ajaxSuccess('Вы успешно зарегистрировались!');
+        } else {
+            return $this->ajaxError('Не удалось зарегистрироваться!');
+        }
     }
 }

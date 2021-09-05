@@ -58,7 +58,11 @@ class ArticleController extends Controller
     public function show($slug)
     {
         $article = Article::findBySlug($slug);
-        if (!$article) return abort(404);
+
+        if (!$article) {
+            return abort(404);
+        }
+
         return view('article', ['article' => $article]);
     }
 
@@ -70,7 +74,10 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        if (!$article->hasOwner()) return abort(403);
+        if (!$article->hasOwner()) {
+            return abort(403);
+        }
+        
         return view('admin.articles.form.edit', ['artice' => $article]);
     }
 

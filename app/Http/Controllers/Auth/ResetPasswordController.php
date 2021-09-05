@@ -54,7 +54,10 @@ class ResetPasswordController extends Controller
             }
         );
 
-        if ($status == Password::PASSWORD_RESET) return $this->ajaxSuccess('Пароль успешно изменился');
-        else return $this->ajaxError('Не удалось сменить пароль');
+        if ($status == Password::PASSWORD_RESET) {
+            return $this->ajaxSuccess('Пароль успешно изменился');
+        } else {
+            return $this->ajaxError('Не удалось сменить пароль');
+        }
     }
 }
