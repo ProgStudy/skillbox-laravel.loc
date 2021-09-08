@@ -5,11 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleFormRequest;
 use App\Models\Article;
+use App\Models\Observers\ArticleObserver;
 use App\Services\TagsSynchronizer;
 use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
+
+    public function __construct()
+    {
+        Article::observe(new ArticleObserver());
+    }
+
     /**
      * Display a listing of the resource.
      *
