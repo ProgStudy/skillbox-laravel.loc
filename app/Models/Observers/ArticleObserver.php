@@ -6,7 +6,8 @@ use App\Mail\ArticleHandlerMail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 
-class ArticleObserver {
+class ArticleObserver
+{
 
     public function created(Model $model)
     {
