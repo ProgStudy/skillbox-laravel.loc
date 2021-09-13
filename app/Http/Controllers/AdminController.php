@@ -11,6 +11,7 @@ class AdminController extends Controller
 {
     public function index()
     {
+        $this->nextByRole(['admin']);
         return view('admin.index');
     }
 
