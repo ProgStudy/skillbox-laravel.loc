@@ -37,6 +37,12 @@ class HomeController extends Controller
         return view('contacts');
     }
 
+    /**
+     * ajaxSendContact function
+     *
+     * @param Request $request
+     * @return void
+     */
     public function ajaxSendContact(Request $request)
     {
         $validator = Validator::make($request->all(), [

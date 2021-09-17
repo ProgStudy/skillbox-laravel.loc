@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleFormRequest;
 use App\Models\Article;
 use App\Models\Observers\ArticleObserver;
