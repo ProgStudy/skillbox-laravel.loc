@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         
         $user = User::create(
             [
-                'name'      => 'Test Auther',
+                'name'      => 'Test Author',
                 'email'     => 'test@tt.tt',
                 'password'  => Hash::make('qwerty12345'),
             ]

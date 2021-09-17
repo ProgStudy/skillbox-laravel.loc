@@ -74,7 +74,11 @@ class ArticleController extends Controller
             return abort(404);
         }
 
-        return view('article', ['article' => $article]);
+        if ($article->has_public != 1 && (User::hasRole('admin') || Auth::check() && Auth::user()->id == $article->owner_id)) {
+            return view('article', ['article' => $article]);
+        } else {
+            return abort(403);
+        }
     }
 
     /**

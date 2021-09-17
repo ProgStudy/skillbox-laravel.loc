@@ -17,7 +17,7 @@ class Controller extends BaseController
      *
      * @param string $message
      * @param integer $status
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     public function ajaxError($message = "Сервер вернул ошибку!", $status = 200)
     {
@@ -31,7 +31,7 @@ class Controller extends BaseController
      * ajaxErrorForm function
      *
      * @param array $fields
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     public function ajaxErrorForm($fields = [])
     {
@@ -42,7 +42,7 @@ class Controller extends BaseController
      * ajaxErrorFieldsForm function
      *
      * @param [type] $validation
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     public function ajaxErrorFieldsForm($validation = null)
     {
@@ -53,7 +53,7 @@ class Controller extends BaseController
      * ajaxSuccess function
      *
      * @param array $data
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     public function ajaxSuccess($data = [])
     {
@@ -72,7 +72,7 @@ class Controller extends BaseController
      * nextByRole function
      *
      * @param [type] $prefix
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     public function nextByRole($prefix)
     {
@@ -85,7 +85,7 @@ class Controller extends BaseController
      * nextByRoleAjax function
      *
      * @param [type] $prefix
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     public function nextByRoleAjax($prefix)
     {

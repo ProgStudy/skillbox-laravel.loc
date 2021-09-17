@@ -9,10 +9,10 @@ class TagController extends Controller
 {
 
     /**
-     * Undocumented function
+     * index function
      *
      * @param Tag $tag
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     public function index(Tag $tag)
     {

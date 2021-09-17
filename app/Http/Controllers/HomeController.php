@@ -41,7 +41,7 @@ class HomeController extends Controller
      * ajaxSendContact function
      *
      * @param Request $request
-     * @return void
+     * @return \Illuminate\Http\Response
      */
     public function ajaxSendContact(Request $request)
     {

@@ -12,7 +12,11 @@
             @admin
             <a href="/admin" class="link">Админ. раздел</a>
             @else
+
+            @if(Auth::check() && Auth::user()->id == $article->owner_id)
             <a href="/admin/articles/{{$article->id}}/edit" class="link">Редактировать</a>
+            @endif
+
             @endadmin
         </div>
         @endauth
