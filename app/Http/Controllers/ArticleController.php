@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleFormRequest;
 use App\Models\Article;
 use App\Models\Observers\ArticleObserver;
+use App\Models\User;
 use App\Services\TagsSynchronizer;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,7 +24,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::allByOwner();
+        $this->nextByRole(['admin', 'author']);
+        $articles = User::hasRole(['admin']) ? Article::all() : Article::allByOwner();
         return view('admin.articles.index', ['articles' => $articles]);
     }
 
@@ -35,6 +36,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
+        $this->nextByRole(['admin', 'author']);
         return view('admin.articles.form.new');
     }
 
@@ -46,6 +48,8 @@ class ArticleController extends Controller
      */
     public function store(TagsSynchronizer $tSync, ArticleFormRequest $request)
     {
+        $this->nextByRoleAjax(['admin', 'author']);
+
         try {
             $article = Article::create(array_merge($request->allCorrectFields(), ['owner_id' => Auth::user()->id, 'created_at' => now(), 'updated_at' => now()]));
             $tSync->sync(collect(explode(',', request('tags'))), $article);
@@ -70,7 +74,11 @@ class ArticleController extends Controller
             return abort(404);
         }
 
-        return view('article', ['article' => $article]);
+        if ($article->has_public != 1 && (User::hasRole('admin') || Auth::check() && Auth::user()->id == $article->owner_id)) {
+            return view('article', ['article' => $article]);
+        } else {
+            return abort(403);
+        }
     }
 
     /**
@@ -81,7 +89,9 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        if (!$article->hasOwner()) {
+        $this->nextByRole(['admin', 'author']);
+
+        if (!$article->hasOwner() && !User::hasRole(['admin'])) {
             return abort(403);
         }
         
@@ -97,6 +107,8 @@ class ArticleController extends Controller
      */
     public function update(TagsSynchronizer $tSync, ArticleFormRequest $request, Article $article)
     {
+        $this->nextByRoleAjax(['admin', 'author']);
+
         try {
             $article->fill((array) $request->allCorrectFields(), ['updated_at' => now()])->save();
             $tSync->sync(collect(explode(',', request('tags'))), $article);
@@ -115,6 +127,8 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
+        $this->nextByRoleAjax(['admin', 'author']);
+
         try {
             $article->delete();
         } catch (\Throwable $th) {

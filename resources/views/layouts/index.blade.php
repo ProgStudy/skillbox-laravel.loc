@@ -65,7 +65,19 @@
                     <a class="p-2 text-muted" href="/">Главная</a>
                     <a class="p-2 text-muted" href="/about">О нас</a>
                     <a class="p-2 text-muted" href="/contacts">Контакты</a>
-                    @auth <a class="p-2 text-muted" href="/admin">Админ. раздел</a> @endauth
+                    @auth
+                    
+                    @admin
+
+                    <a class="p-2 text-muted" href="/admin">Админ. раздел</a>
+                    
+                    @else
+                    
+                    <a class="p-2 text-muted" href="/admin/articles">Список статей</a>
+                    
+                    @endadmin
+
+                    @endauth
                 </nav>
             </div>
         </div>

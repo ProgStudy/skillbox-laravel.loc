@@ -6,14 +6,24 @@ use Illuminate\Http\Request;
 
 use App\Models\Article;
 use App\Models\Contact;
-
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $articles = Article::where('has_public', 1)->orderBy('created_at', 'desc')->get();
+        $articles = Article::where(function($q) {
+            if (!User::hasRole(['admin'])) {
+                if (User::hasRole(['author'])) { 
+                    $q->where('has_public', 1)->orWhere('owner_id', Auth::user()->id);
+                } else {
+                    $q->where('has_public', 1);
+                }
+            }
+        })->orderBy('created_at', 'desc')->get();
+
         return view('home', ['articles' => $articles]);
     }
 
@@ -27,6 +37,12 @@ class HomeController extends Controller
         return view('contacts');
     }
 
+    /**
+     * ajaxSendContact function
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function ajaxSendContact(Request $request)
     {
         $validator = Validator::make($request->all(), [
