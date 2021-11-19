@@ -34,5 +34,9 @@ class Article extends Model
         return self::where('owner_id', Auth::user()->id)->get();
     }
 
+    public function sendAllMailNotifyNewArticle($message)
+    {
+        User::sendAllMailNotifyArticle($this, $message);
+    }
 
 }
