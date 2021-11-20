@@ -44,5 +44,10 @@ class DatabaseSeeder extends Seeder
         );
 
         $user->roles()->attach($roleAuthor->id);
+
+        $this->call([
+            UserSeeder::class,
+            ArticleSeeder::class
+        ]);
     }
 }
