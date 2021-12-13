@@ -6,8 +6,10 @@ use App\Http\Requests\ArticleFormRequest;
 use App\Models\Article;
 use App\Models\Observers\ArticleObserver;
 use App\Models\User;
+use App\Services\ExternalAPIRest\PushAll;
 use App\Services\TagsSynchronizer;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ArticleController extends Controller
 {
@@ -46,14 +48,16 @@ class ArticleController extends Controller
      * @param  App\Http\Requests\ArticleFormRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TagsSynchronizer $tSync, ArticleFormRequest $request)
+    public function store(TagsSynchronizer $tSync, ArticleFormRequest $request, PushAll $pushAll)
     {
         $this->nextByRoleAjax(['admin', 'author']);
 
         try {
             $article = Article::create(array_merge($request->allCorrectFields(), ['owner_id' => Auth::user()->id, 'created_at' => now(), 'updated_at' => now()]));
             $tSync->sync(collect(explode(',', request('tags'))), $article);
+            $pushAll->send('Была создана новая статья!', $article->name, env('APP_URL') . '/' . $article->slug);
         } catch (\Throwable $th) {
+            Log::debug($th->getMessage());
             return $this->ajaxError('Не удалось добавить новую статью!');
         }
 
