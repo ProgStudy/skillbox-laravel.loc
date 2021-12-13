@@ -39,4 +39,14 @@ class Article extends Model
         User::sendAllMailNotifyArticle($this, $message);
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function histories()
+    {
+        return $this->belongsToMany(User::class, ArticleHistory::class)->withPivot(['created_at', 'before', 'after']);
+    }
+
 }

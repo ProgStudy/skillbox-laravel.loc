@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Article;
 use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -37,6 +39,12 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('admin', function () {
             return User::hasRole(['admin']);
         });
+
+        Blade::if('showHistory', function (Article $article) {
+            return (User::hasRole(['admin']) || (Auth::check() ? $article->owner_id == Auth::user()->id : false));
+        });
+
+        \Carbon\Carbon::setLocale(config('app.locale'));
 
     }
 }

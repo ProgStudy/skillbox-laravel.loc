@@ -21,6 +21,40 @@
             .error-field {
                 font-size: 12px;
             }
+            .comment-date {
+                display: inline-block;
+                color:rgb(153, 153, 153);
+                text-align: right;
+                width: 100%;
+            }
+            .comment {
+                
+            }
+            .no-comment {
+                display: block;
+                text-align: center;
+                color:rgb(153, 153, 153);
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+            .d-block {
+                display: block;
+            }
+            .w-100 {
+                width: 100%;
+            }
+            .mt-10 {
+                margin-top: 10px;
+            }
+            .mb-10 {
+                margin-bottom: 10px;
+            }
+            .p-10 {
+                padding: 10px;
+            }
+            .no-resize {
+                resize: none;
+            }
         </style>
     </head>
 
