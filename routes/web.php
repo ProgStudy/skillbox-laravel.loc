@@ -32,6 +32,12 @@ Route::group(['prefix' => 'articles'], function() {
     Route::get('/tags/{tag}', 'TagController@index');
 });
 
+Route::prefix('comments')->group(function () {
+    Route::prefix('ajax')->group(function () {
+        Route::get('/send', 'CommentController@store');
+    });
+});
+
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
     Route::get('/',         'AdminController@index');
     Route::get('/feedback', 'AdminController@feedback');
