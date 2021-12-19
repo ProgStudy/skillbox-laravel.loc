@@ -31,7 +31,7 @@ class Article extends Model
 
     public static function allByOwner()
     {
-        return self::where('owner_id', Auth::user()->id)->get();
+        return self::where('owner_id', Auth::user()->id);
     }
 
     public function sendAllMailNotifyNewArticle($message)

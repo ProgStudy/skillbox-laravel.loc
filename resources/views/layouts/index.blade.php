@@ -28,7 +28,7 @@
                 width: 100%;
             }
             .comment {
-                
+
             }
             .no-comment {
                 display: block;
@@ -75,7 +75,7 @@
 
                     <div class="dropdown">
                         <a class="btn btn-outline-secondary dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown">{{Auth::user()->email}}</a>
-                    
+
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             <form action="/logout" method="post" class="d-inline" data-redirect="/">
                                 @csrf
@@ -83,7 +83,7 @@
                             </form>
                         </div>
                     </div>
-                    
+
                     @else
 
                     <a class="btn btn-sm btn-outline-secondary" href="/login">Войти</a>
@@ -97,18 +97,19 @@
             <div class="nav-scroller py-1 mb-2">
                 <nav class="nav d-flex justify-content-between">
                     <a class="p-2 text-muted" href="/">Главная</a>
+                    <a class="p-2 text-muted" href="/news">Новости</a>
                     <a class="p-2 text-muted" href="/about">О нас</a>
                     <a class="p-2 text-muted" href="/contacts">Контакты</a>
                     @auth
-                    
+
                     @admin
 
                     <a class="p-2 text-muted" href="/admin">Админ. раздел</a>
-                    
+
                     @else
-                    
+
                     <a class="p-2 text-muted" href="/admin/articles">Список статей</a>
-                    
+
                     @endadmin
 
                     @endauth

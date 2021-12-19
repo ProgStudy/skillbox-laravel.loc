@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Article;
 use App\Models\Contact;
+use App\Models\News;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -16,15 +17,21 @@ class HomeController extends Controller
     {
         $articles = Article::where(function($q) {
             if (!User::hasRole(['admin'])) {
-                if (User::hasRole(['author'])) { 
+                if (User::hasRole(['author'])) {
                     $q->where('has_public', 1)->orWhere('owner_id', Auth::user()->id);
                 } else {
                     $q->where('has_public', 1);
                 }
             }
-        })->orderBy('created_at', 'desc')->get();
+        })->orderBy('created_at', 'desc')->paginate(10);
 
         return view('home', ['articles' => $articles]);
+    }
+
+    public function news()
+    {
+        $news = News::paginate(10);
+        return view('news', ['news' => $news]);
     }
 
     public function about()
@@ -53,7 +60,7 @@ class HomeController extends Controller
         if ($validator->fails()) {
             return $this->ajaxError($validator->errors()->first());
         }
-        
+
         $contact                = new Contact();
 
         $contact->email         = $request->email;

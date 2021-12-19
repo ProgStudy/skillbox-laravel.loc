@@ -32,6 +32,12 @@ Route::group(['prefix' => 'articles'], function() {
     Route::get('/tags/{tag}', 'TagController@index');
 });
 
+Route::prefix('news')->group(function () {
+    Route::get('/', 'HomeController@news');
+
+    Route::get('/{slug}', 'NewsController@show');
+});
+
 Route::prefix('comments')->group(function () {
     Route::prefix('ajax')->group(function () {
         Route::get('/send', 'CommentController@store');
@@ -43,6 +49,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
     Route::get('/feedback', 'AdminController@feedback');
 
     Route::resource('/articles', 'ArticleController');
+    Route::resource('/news', 'NewsController');
 
 });
 
