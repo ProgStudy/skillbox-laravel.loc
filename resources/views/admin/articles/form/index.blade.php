@@ -33,5 +33,5 @@
 </div>
 <div class="btn-group">
     <button type="submit" class="btn btn-primary w-100">Сохранить</button>
-    <a href="/admin/articles/" class="btn btn-danger w-100" >Назад</a>
+    <a href="#" onclick="history.back()" class="btn btn-danger w-100" >Назад</a>
 </div>

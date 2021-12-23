@@ -16,7 +16,7 @@ class TagController extends Controller
      */
     public function index(Tag $tag)
     {
-        $articles = $tag->articles()->with('tags')->get();
+        $articles = $tag->articles()->with('tags')->paginate(10);
         return view('home', compact(['articles']));
     }
 }

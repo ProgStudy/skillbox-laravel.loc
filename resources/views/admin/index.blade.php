@@ -10,6 +10,7 @@
             <ul>
                 <li><a class="link d-block" href="/admin/articles">Список статей</a></li>
                 <li><a class="link d-block" href="/admin/feedback">Список обращений</a></li>
+                <li><a class="link d-block" href="/admin/news">Список новостей</a></li>
             </ul>
         <br>
     </div><!-- /.blog-main -->

@@ -15,11 +15,13 @@
             <p>{{$article->preview}}</p>
             <div>
                 @foreach ($article->tags as $tag)
-                <span class="badge badge-secondary">{{$tag->name}}</span>   
+                <span class="badge badge-secondary">{{$tag->name}}</span>
                 @endforeach
             </div>
         </div><!-- /.blog-post -->
         @endforeach
+
+        {{ $articles->links() }}
 
     </div><!-- /.blog-main -->
     @include('layouts.sidebar')

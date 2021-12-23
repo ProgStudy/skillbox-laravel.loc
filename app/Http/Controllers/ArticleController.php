@@ -27,7 +27,7 @@ class ArticleController extends Controller
     public function index()
     {
         $this->nextByRole(['admin', 'author']);
-        $articles = User::hasRole(['admin']) ? Article::all() : Article::allByOwner();
+        $articles = User::hasRole(['admin']) ? Article::paginate(20) : Article::allByOwner()->paginate(20);
         return view('admin.articles.index', ['articles' => $articles]);
     }
 
@@ -103,8 +103,8 @@ class ArticleController extends Controller
         if (!$article->hasOwner() && !User::hasRole(['admin'])) {
             return abort(403);
         }
-        
-        return view('admin.articles.form.edit', ['artice' => $article]);
+
+        return view('admin.articles.form.edit', ['article' => $article]);
     }
 
     /**
@@ -143,7 +143,7 @@ class ArticleController extends Controller
         } catch (\Throwable $th) {
             return $this->ajaxError('Не удалось удалить статью!');
         }
-        
+
         return $this->ajaxSuccess('Статья успешна удалена!');
     }
 }

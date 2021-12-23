@@ -6,6 +6,7 @@
 <div class="row">
     <div class="col-md-12 blog-main">
         <h3 class="pb-3 mb-4 font-italic border-bottom">@yield('title')</h3>
+            {{ $articles->links() }}
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -53,6 +54,7 @@
                     </tr>
                 </tfoot>
             </table>
+            {{ $articles->links() }}
         <br>
     </div><!-- /.blog-main -->
 </div><!-- /.row -->

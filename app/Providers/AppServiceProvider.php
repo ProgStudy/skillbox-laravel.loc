@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Article;
 use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
@@ -31,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        
+
         view()->composer('layouts.sidebar', function($view) {
             $view->with('tagsCloud', Tag::has('articles')->get());
         });
@@ -45,6 +46,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         \Carbon\Carbon::setLocale(config('app.locale'));
+
+        Paginator::defaultView("pagination::bootstrap-4");
 
     }
 }

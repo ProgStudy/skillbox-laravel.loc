@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
 
         $user->roles()->attach($roleAdmin->id);
 
-        
+
         $user = User::create(
             [
                 'name'      => 'Test Author',
@@ -47,7 +47,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UserSeeder::class,
-            ArticleSeeder::class
+            ArticleSeeder::class,
+            NewsSeeder::class
         ]);
     }
 }
