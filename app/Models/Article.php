@@ -21,7 +21,7 @@ class Article extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     public function hasOwner()
@@ -41,7 +41,7 @@ class Article extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->morphToMany(Comment::class, 'commentable');
     }
 
     public function histories()
@@ -49,4 +49,13 @@ class Article extends Model
         return $this->belongsToMany(User::class, ArticleHistory::class)->withPivot(['created_at', 'before', 'after']);
     }
 
+    public function getTypeItem()
+    {
+        return 'article';
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'owner_id');
+    }
 }

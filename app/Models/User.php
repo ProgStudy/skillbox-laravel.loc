@@ -67,4 +67,14 @@ class User extends Authenticatable
             Log::debug($th->getMessage());
         }
     }
+
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function articles()
+    {
+        return $this->hasMany(Article::class, 'owner_id', 'id');
+    }
 }

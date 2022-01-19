@@ -11,13 +11,18 @@ class Comment extends Model
 
     protected $guarded = [];
 
-    public function article()
-    {
-        return $this->hasOne(Article::class, 'article_id', 'id');
-    }
-
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function articles()
+    {
+        return $this->morphedByMany(Article::class, 'commentable');
+    }
+
+    public function news()
+    {
+        return $this->morphedByMany(News::class, 'commentable');
     }
 }

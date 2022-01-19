@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'HomeController@index');
 Route::get('/about', 'HomeController@about');
+Route::get('/statistic', 'HomeController@statistic');
 
 Route::group(['prefix' => 'contacts'], function() {
 
@@ -29,13 +30,16 @@ Route::group(['prefix' => 'contacts'], function() {
 
 Route::group(['prefix' => 'articles'], function() {
     Route::get('/{slug}', 'ArticleController@show');
-    Route::get('/tags/{tag}', 'TagController@index');
 });
 
 Route::prefix('news')->group(function () {
     Route::get('/', 'HomeController@news');
 
     Route::get('/{slug}', 'NewsController@show');
+});
+
+Route::prefix('tags')->group(function () {
+    Route::get('/{tag}', 'TagController@index');
 });
 
 Route::prefix('comments')->group(function () {

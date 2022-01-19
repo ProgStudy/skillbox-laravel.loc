@@ -21,6 +21,11 @@
     <textarea name="description" class="form-control" style="resize:vertical; height: 250px;"> {{isset($itemNews) ? $itemNews->description : ''}}</textarea>
     <p class="text-danger error-field"></p>
 </div>
+<div class="form-group">
+    <label>Теги</label>
+    <input type="text" name="tags" value="{{isset($itemNews) ? $itemNews->tags->pluck('name')->implode(',') : ''}}" class="form-control">
+    <p class="text-danger error-field"></p>
+</div>
 <div class="btn-group">
     <button type="submit" class="btn btn-primary w-100">Сохранить</button>
     <a href="#" onclick="history.back()" class="btn btn-danger w-100" >Назад</a>

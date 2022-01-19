@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Article;
+use App\Models\News;
 use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
@@ -34,7 +36,8 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         view()->composer('layouts.sidebar', function($view) {
-            $view->with('tagsCloud', Tag::has('articles')->get());
+            $tags = Tag::has('news')->orHas('articles')->get();
+            $view->with('tagsCloud', $tags);
         });
 
         Blade::if('admin', function () {

@@ -3,22 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CommentFormRequest;
+use App\Models\Article;
 use App\Models\Comment;
+use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
     /**
-     * Store a newly created resource in storage.
+     * Undocumented function
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CommentFormRequest $request
+     * @return Response
      */
     public function store(CommentFormRequest $request)
     {
         try {
-            Comment::create(['text' => $request->text, 'user_id' => Auth::user()->id, 'article_id' => $request->article_id, 'created_at' => now(), 'updated_at' => now()]);
+            $comment = new Comment(['text' => $request->text, 'user_id' => Auth::user()->id, 'created_at' => now(), 'updated_at' => now()]);
+            if ($request->type == 'news') {
+                $collect = News::find($request->id);
+            } else {
+                $collect = Article::find($request->id);
+            }
+
+            if (!$collect) {
+                return $this->ajaxError('Запись не найдена!');
+            }
+
+            $collect->comments()->save($comment);
+
         } catch (\Throwable $th) {
             return $this->ajaxError('Не удалось добавить комментарий!');
         }
