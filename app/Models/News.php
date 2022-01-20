@@ -17,4 +17,19 @@ class News extends Model
             if ($notSelectById) $q->where('id', '!=', $notSelectById);
         })->first();
     }
+
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function comments()
+    {
+        return $this->morphToMany(Comment::class, 'commentable');
+    }
+
+    public function getTypeItem()
+    {
+        return 'news';
+    }
 }

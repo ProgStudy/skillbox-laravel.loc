@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Role;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -34,7 +35,6 @@ class DatabaseSeeder extends Seeder
 
         $user->roles()->attach($roleAdmin->id);
 
-
         $user = User::create(
             [
                 'name'      => 'Test Author',
@@ -45,10 +45,12 @@ class DatabaseSeeder extends Seeder
 
         $user->roles()->attach($roleAuthor->id);
 
+        $randCount  = rand(20, 60);
+        Tag::factory()->count($randCount)->create();
+
         $this->call([
             UserSeeder::class,
-            ArticleSeeder::class,
-            NewsSeeder::class
+            ArticleAndNewsSeeder::class
         ]);
     }
 }

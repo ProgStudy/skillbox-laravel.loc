@@ -26,8 +26,8 @@ class CommentFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'article_id.required'   => 'Не указан id статьи!',
-            'article_id.integer'    => 'id должен быть числом!',
+            'id.required'           => 'Не указан id статьи или новости!',
+            'id.integer'            => 'id должен быть числом!',
             'text.required'         => 'Сообщение должно быть заполнено!',
             'text.max'              => 'Сообщение должно содержать не более 255 символов!',
             'text.min'              => 'Слишком маленькое сообщение!'
@@ -42,7 +42,7 @@ class CommentFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'article_id'    => 'required|integer',
+            'id'    => 'required|integer',
             'text'          => 'required|max:255|min:10'
         ];
     }

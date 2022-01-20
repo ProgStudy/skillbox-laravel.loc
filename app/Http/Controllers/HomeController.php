@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Article;
+use App\Models\ArticleHistory;
+use App\Models\Comment;
 use App\Models\Contact;
 use App\Models\News;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use DB;
 
 class HomeController extends Controller
 {
@@ -26,6 +29,87 @@ class HomeController extends Controller
         })->orderBy('created_at', 'desc')->paginate(10);
 
         return view('home', ['articles' => $articles]);
+    }
+
+    public function statistic()
+    {
+        $result = [
+            [
+                'name' => 'Общее количество статей', 
+                'value' => Article::count()
+            ],
+            [
+                'name' => 'Общее количество новостей', 
+                'value' => News::count()
+            ],
+            [
+                'name' => 'ФИО автора, у которого больше всего статей на сайте' , 
+                'value' => ''
+            ],
+            [
+                'name' => 'Самая длинная статья' , 
+                'value' => ''
+            ],
+            [
+                'name' => 'Самая короткая статья' , 
+                'value' => ''
+            ],
+            [
+                'name' => 'Среднее количество статей у активных пользователей' , 
+                'value' => ''
+            ],
+            [
+                'name' => 'Самая непостоянная' , 
+                'value' => ''
+            ],
+            [
+                'name' => 'Самая обсуждаемая статья' , 
+                'value' => ''
+            ]
+        ];
+
+        //больше всего статей
+        $article = Article::selectRaw('owner_id, count(id) as lengs')
+                ->groupBy('owner_id')
+                ->orderBy('lengs', 'desc')
+                ->with('user')
+                ->first();
+
+        $result[2]['value'] = $article->user->name;
+
+        //самая длинная и короткая статья
+        $articleQuery = Article::selectRaw('length(description) as countDesc, name, concat("/articles/", slug) as link');
+        
+        $article = (clone ($articleQuery))->orderBy('countDesc', 'desc')->first();
+        $result[3]['value'] = "<a href='$article->link'>$article->name</a> | Количество символов: $article->countDesc";
+
+        $article = (clone ($articleQuery))->orderBy('countDesc', 'asc')->first();
+        $result[4]['value'] = "<a href='$article->link'>$article->name</a> | Количество символов: $article->countDesc";
+
+        //среднее количество статей у активных пользователей
+        $result[5]['value'] = round(Article::selectRaw('count(id) as counts')->groupBy('owner_id')->having('counts', '>', 1)->avg('counts'));
+
+        //Самая непостоянная
+        $history = ArticleHistory::selectRaw('count(article_id) as counts, article_id')
+                    ->groupBy('article_id')
+                    ->orderBy('counts', 'desc')
+                    ->with('article')
+                    ->first();
+
+        $result[6]['value'] = "<a href='/articles/" . $history->article->slug . "'>" . $history->article->name . "</a>";
+
+        //Самая обсуждаемая
+        $article = Comment::selectRaw('articles.name as name, concat("/articles/", articles.slug) as link, count(comments.id) as counts')
+                    ->leftJoin('commentables', 'commentables.comment_id', '=', 'comments.id')
+                    ->leftJoin('articles', 'articles.id', '=', 'commentables.commentable_id')
+                    ->where('commentables.commentable_type', "App\Models\Article")
+                    ->groupBy('commentables.commentable_id')
+                    ->orderBy('counts', 'desc')
+                    ->first();
+
+        $result[7]['value'] = "<a href='$article->link'>$article->name</a>";
+
+        return view('statisic', compact('result'));
     }
 
     public function news()

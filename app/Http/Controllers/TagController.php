@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,9 @@ class TagController extends Controller
      */
     public function index(Tag $tag)
     {
-        $articles = $tag->articles()->with('tags')->paginate(10);
-        return view('home', compact(['articles']));
+        $collectArticles = $tag->articles()->with('tags')->get();
+        $collectNews = $tag->news()->with('tags')->get();
+ 
+        return view('list-by-tag', compact(['collectArticles', 'collectNews']));
     }
 }

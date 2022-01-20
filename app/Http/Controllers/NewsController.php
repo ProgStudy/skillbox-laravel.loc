@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\NewsFormRequest;
 use App\Models\News;
+use App\Services\TagsSynchronizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -39,13 +40,15 @@ class NewsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param TagsSynchronizer $tSync
+     * @param NewsFormRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(NewsFormRequest $request)
+    public function store(TagsSynchronizer $tSync, NewsFormRequest $request)
     {
         try {
-            News::create(array_merge($request->allCorrectFields(), ['created_at' => now(), 'updated_at' => now()]));
+            $news = News::create(array_merge($request->allCorrectFields(), ['created_at' => now(), 'updated_at' => now()]));
+            $tSync->sync(collect(explode(',', request('tags'))), $news);
         } catch (\Throwable $th) {
             Log::debug($th->getMessage());
             return $this->ajaxError('Не удалось добавить новость!');
@@ -89,11 +92,12 @@ class NewsController extends Controller
      * @param  \App\Models\News  $news
      * @return \Illuminate\Http\Response
      */
-    public function update(NewsFormRequest $request, News $news)
+    public function update(TagsSynchronizer $tSync, NewsFormRequest $request, News $news)
     {
 
         try {
             $news->fill((array) $request->allCorrectFields(), ['updated_at' => now()])->save();
+            $tSync->sync(collect(explode(',', request('tags'))), $news);
         } catch (\Throwable $th) {
             return $this->ajaxError('Не удалось обновить новость!');
         }

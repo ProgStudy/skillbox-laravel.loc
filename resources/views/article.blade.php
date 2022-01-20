@@ -67,7 +67,8 @@
             @auth
                 <form action="/comments/ajax/send" method="get" data-redirect="/articles/{{$article->slug}}">
                     @csrf
-                    <input type="hidden" name="article_id" value="{{$article->id}}">
+                    <input type="hidden" name="id" value="{{$article->id}}">
+                    <input type="hidden" name="type" value="article">
                     <textarea class="w-100 mb-10 p-10 no-resize form-control" style="height: 100px" name="text" placeholder="Сообщение"></textarea>
                     <p class="error-field text-danger"></p>
                     <button type="submit" class="mb-10 btn btn-success">Отправить</button>
