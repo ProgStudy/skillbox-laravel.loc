@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Mail\ArticleHandlerMail;
+use App\Mail\BuildedReportMail;
 use App\Mail\NotificationNewArticleMail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -76,5 +77,14 @@ class User extends Authenticatable
     public function articles()
     {
         return $this->hasMany(Article::class, 'owner_id', 'id');
+    }
+
+    public function sendReportToMail($report)
+    {
+        try {
+            Mail::to($this->email)->send(new BuildedReportMail($report));
+        } catch (\Throwable $th) {
+            Log::debug($th->getMessage());
+        }
     }
 }

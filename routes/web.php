@@ -54,6 +54,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 
     Route::resource('/articles', 'ArticleController');
     Route::resource('/news', 'NewsController');
+    
+    Route::prefix('reports')->group(function () {
+        Route::get('/', 'ReportController@show');
+        Route::prefix('ajax')->group(function () {
+            Route::post('/run', 'ReportController@ajaxRun');
+        });
+    });
 
 });
 
