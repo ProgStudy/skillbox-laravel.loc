@@ -54,9 +54,14 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
-    public static function hasRole($prefix)
+    public static function hasRoleByAuth($prefix)
     {
         return (Auth::user() && Auth::user()->roles->whereIn('prefix', $prefix)->first());        
+    }
+
+    public function hasRole($prefix)
+    {
+        return $this->roles->whereIn('prefix', $prefix)->first() ? true : false;
     }
 
     public static function sendAllMailNotifyArticle(Article $article, $message)

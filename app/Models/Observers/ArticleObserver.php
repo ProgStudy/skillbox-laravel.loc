@@ -30,6 +30,8 @@ class ArticleObserver
             'created_at' => now(),
             'updated_at' => now()
         ]);
+
+        broadcast(new \App\Events\ChangeArticleEvent($model))->toOthers();
     }
 
     public function deleted(Model &$model)
