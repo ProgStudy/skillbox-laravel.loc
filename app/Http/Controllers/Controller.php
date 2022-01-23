@@ -76,7 +76,7 @@ class Controller extends BaseController
      */
     public function nextByRole($prefix)
     {
-        if (!User::hasRole($prefix)) {
+        if (!User::hasRoleByAuth($prefix)) {
             return abort(403);
         }
     }
@@ -89,7 +89,7 @@ class Controller extends BaseController
      */
     public function nextByRoleAjax($prefix)
     {
-        if (!User::hasRole($prefix)) {
+        if (!User::hasRoleByAuth($prefix)) {
             return $this->ajaxError('Доступ ограничен!', 403);
         }
     }

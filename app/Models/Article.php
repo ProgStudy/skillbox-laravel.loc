@@ -12,6 +12,13 @@ class Article extends Model
 
     protected $guarded = [];
 
+    private $attrsEngToRus = [
+        'description'   => 'Полное описание',
+        'preview'       => 'Краткое описание',
+        'name'          => 'Название',
+        'slug'          => 'Имя ссылки'
+    ];
+
     public static function findBySlug($slug, $notSelectById = null)
     {
         return self::where('slug', $slug)->where(function($q) use ($notSelectById) {
@@ -57,5 +64,24 @@ class Article extends Model
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'owner_id');
+    }
+
+    public function getDitryRus()
+    {
+        $attrsKeys = array_keys($this->getDirty());
+        $result = [];
+
+        foreach ($attrsKeys as $key) {
+            if (($name = $this->attrTranslateName($key)) != null) {
+                $result[] = $name;
+            }
+        }
+
+        return $result;
+    }
+
+    public function attrTranslateName($key)
+    {
+        return array_key_exists($key, $this->attrsEngToRus) ? $this->attrsEngToRus[$key] : null;
     }
 }

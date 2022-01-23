@@ -27,7 +27,7 @@ class ArticleController extends Controller
     public function index()
     {
         $this->nextByRole(['admin', 'author']);
-        $articles = User::hasRole(['admin']) ? Article::paginate(20) : Article::allByOwner()->paginate(20);
+        $articles = User::hasRoleByAuth(['admin']) ? Article::paginate(20) : Article::allByOwner()->paginate(20);
         return view('admin.articles.index', ['articles' => $articles]);
     }
 
@@ -79,7 +79,7 @@ class ArticleController extends Controller
         }
 
         if ($article->has_public != 1) {
-            if ((User::hasRole('admin') || Auth::check() && Auth::user()->id == $article->owner_id)) {
+            if ((User::hasRoleByAuth('admin') || Auth::check() && Auth::user()->id == $article->owner_id)) {
                 return view('article', ['article' => $article]);
             } else {
                 return abort(403);
@@ -100,7 +100,7 @@ class ArticleController extends Controller
     {
         $this->nextByRole(['admin', 'author']);
 
-        if (!$article->hasOwner() && !User::hasRole(['admin'])) {
+        if (!$article->hasOwner() && !User::hasRoleByAuth(['admin'])) {
             return abort(403);
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\BuildedReportEvent;
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\News;
@@ -76,10 +77,11 @@ class ProcessBuildReport implements ShouldQueue
             }
         }
 
-
         $data = $this->arrayToCSV($result);
-
+        
         unset($result[0]);
+
+        event(new BuildedReportEvent($this->user, $result));
 
         Storage::disk('local')->put('reports/report.csv', $data);
 

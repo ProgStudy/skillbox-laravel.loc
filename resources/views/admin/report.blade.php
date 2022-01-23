@@ -3,6 +3,7 @@
 @section('title', 'Отчеты')
 
 @section('content')
+<input type="hidden" name="userId" value="{{auth()->user()->id}}">
 <form action="/admin/reports/ajax/run" method="POST">
     @csrf
     <div class="row">

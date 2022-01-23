@@ -19,8 +19,8 @@ class HomeController extends Controller
     public function index()
     {
         $articles = Article::where(function($q) {
-            if (!User::hasRole(['admin'])) {
-                if (User::hasRole(['author'])) {
+            if (!User::hasRoleByAuth(['admin'])) {
+                if (User::hasRoleByAuth(['author'])) {
                     $q->where('has_public', 1)->orWhere('owner_id', Auth::user()->id);
                 } else {
                     $q->where('has_public', 1);
