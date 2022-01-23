@@ -16,7 +16,12 @@
         <div>
             <h4>Комментарии</h4>
             <div>
-                @forelse ($itemNews->comments as $comment)
+                @php
+                    $comments = cache()->tags(['comments'])->rememberForever('news.blade.comments:' . $itemNews->slug, function() use ($itemNews){
+                        return $itemNews->comments;
+                    });
+                @endphp
+                @forelse ($comments as $comment)
                     <div class="card mt-10 mb-10">
                         <div class="card-body">
                             <div class="comment ">

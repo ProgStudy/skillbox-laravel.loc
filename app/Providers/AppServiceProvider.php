@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\News;
 use App\Models\Tag;
 use App\Models\User;
+use Cache;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +37,10 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         view()->composer('layouts.sidebar', function($view) {
-            $tags = Tag::has('news')->orHas('articles')->get();
+            $tags = Cache::tags(['tags'])->rememberForever('tagsCloud', function () {
+                return Tag::has('news')->orHas('articles')->get();
+            });
+            
             $view->with('tagsCloud', $tags);
         });
 

@@ -8,6 +8,7 @@ use App\Models\Observers\ArticleObserver;
 use App\Models\User;
 use App\Services\ExternalAPIRest\PushAll;
 use App\Services\TagsSynchronizer;
+use Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -27,7 +28,11 @@ class ArticleController extends Controller
     public function index()
     {
         $this->nextByRole(['admin', 'author']);
-        $articles = User::hasRoleByAuth(['admin']) ? Article::paginate(20) : Article::allByOwner()->paginate(20);
+
+        $articles = Cache::tags(['articles'])->rememberForever('ArticleController:index_' . request()->get('page', 1), function () {
+            return User::hasRoleByAuth(['admin']) ? Article::paginate(20) : Article::allByOwner()->paginate(20);
+        });
+        
         return view('admin.articles.index', ['articles' => $articles]);
     }
 
@@ -71,8 +76,10 @@ class ArticleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($slug)
-    {
-        $article = Article::findBySlug($slug);
+    {        
+        $article = Cache::tags(['articles'])->rememberForever('ArticleController:index_' . $slug, function () use ($slug) {
+            return Article::findBySlug($slug);
+        });
 
         if (!$article) {
             return abort(404);
