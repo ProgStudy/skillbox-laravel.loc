@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NewsFormRequest;
 use App\Models\News;
 use App\Services\TagsSynchronizer;
+use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -23,7 +24,10 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $news = News::paginate(20);
+        $news = Cache::tags(['news'])->rememberForever('NewsController:index_' . request()->get('page', 1), function () {
+            return News::paginate(20);
+        });
+
         return view('admin.news.index', ['news' => $news]);
     }
 
@@ -65,7 +69,9 @@ class NewsController extends Controller
      */
     public function show($slug)
     {
-        $news = News::findBySlug($slug);
+        $news = Cache::tags(['news'])->rememberForever('NewsController:show_' . $slug, function () use ($slug) {
+            return News::findBySlug($slug);
+        });
 
         if (!$news) {
             return abort(404);

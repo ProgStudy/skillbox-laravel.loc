@@ -2,14 +2,31 @@
 
 namespace App\Models;
 
+use Cache;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Log;
 
 class News extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
+
+    protected static function booted()
+    {
+        static::created(function ($item) {
+            Cache::tags(['news', 'tags'])->flush();           
+        });
+
+        static::updated(function ($item) {
+            Cache::tags(['news', 'tags'])->flush();                    
+        });
+        
+        static::deleted(function ($item) {
+            Cache::tags(['news', 'tags'])->flush();         
+        });
+    }
 
     public static function findBySlug($slug, $notSelectById = null)
     {

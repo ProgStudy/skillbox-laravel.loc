@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cache;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +11,13 @@ class Comment extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    protected static function booted()
+    {
+        static::created(function ($item) {
+            Cache::tags(['comments'])->flush();           
+        });
+    }
 
     public function user()
     {

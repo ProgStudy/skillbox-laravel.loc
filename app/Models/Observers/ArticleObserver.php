@@ -3,6 +3,7 @@
 namespace App\Models\Observers;
 
 use App\Mail\ArticleHandlerMail;
+use Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -15,11 +16,13 @@ class ArticleObserver
     public function created(Model $model)
     {
         $this->sendMailToAdmin('Была создана новая статья!', $model);
+        Cache::tags(['articles', 'tags', 'histories'])->flush();
     }
 
     public function updated(Model $model)
     {
         $this->sendMailToAdmin('Была обновлена статья!', $model);
+        Cache::tags(['articles', 'tags', 'histories'])->flush();
     }
 
     public function updating(Model $model)
@@ -38,6 +41,7 @@ class ArticleObserver
     {
         $model->isDelete = true;
         $this->sendMailToAdmin('Была удалена статья!', $model);
+        Cache::tags(['articles'])->flush();
     }
 
     private function sendMailToAdmin($message, Model $model)

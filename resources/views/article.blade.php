@@ -36,7 +36,12 @@
                 </div>
                 <div class="card-body">
                     <div style="height: 200px; overflow-y: auto;">
-                        @forelse ($article->histories as $history)
+                        @php
+                            $histories = cache()->tags(['histories'])->rememberForever('article.blade.histories:' . $article->slug, function() use ($article){
+                                return $article->histories;
+                            });
+                        @endphp
+                        @forelse ($histories as $history)
                             <p>{{$history->email}} - {{$history->pivot->created_at->diffForHumans()}} <br> <b>До изменений:</b> {{$history->pivot->before}} <br> <b>После изменений:</b> {{$history->pivot->after}}</p>
                         @empty
                             <div class="no-comment">Пусто</div>
@@ -48,7 +53,12 @@
         <div>
             <h4>Комментарии</h4>
             <div>
-                @forelse ($article->comments as $comment)
+                @php
+                    $comments = cache()->tags(['comments'])->rememberForever('article.blade.comments:' . $article->slug, function() use ($article){
+                        return $article->comments;
+                    });
+                @endphp
+                @forelse ($comments as $comment)
                     <div class="card mt-10 mb-10">
                         <div class="card-body">
                             <div class="comment ">
